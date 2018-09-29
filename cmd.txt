@@ -1,0 +1,5 @@
+windows下
+adb shell dumpsys activity | findstr "mFocusedActivity" 查看栈顶activity
+adb shell dumpsys activity | findstr "mFocusedActivity | ResumeActivity"  组合查询
+ubuntu下
+adb shell dumpsys activity | grep "mFocusedActivity" 查看栈顶activity
