@@ -1,0 +1,110 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.ext.target_version
+    defaultConfig {
+        applicationId rootProject.ext.applicationReleaseId
+        minSdkVersion rootProject.ext.min_version
+        targetSdkVersion rootProject.ext.target_version
+        versionCode rootProject.ext.version_code
+        versionName rootProject.ext.version_name
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            buildConfigField("boolean", "RELEASE", "true")
+            //是否移除无用资源
+            shrinkResources true
+            //是否混淆
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            buildConfigField("boolean", "RELEASE", "false")
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.all { output -> // each 改为 all
+            def fileName = System.currentTimeMillis() + "_" + "${variant.buildType.name}_${variant.productFlavors[0].name}_${variant.versionName}.apk"
+            def outFile = output.outputFile
+            if (outFile != null && outFile.name.endsWith('.apk')) {
+                outputFileName = fileName // output.outputFile 改为 outputFileName
+            }
+        }
+    }
+
+    signingConfigs {
+        release {
+            //发布版本的签名配置
+            storeFile file(System.properties['keyStore'])
+            //签名密码
+            storePassword project.property('ray.keyPassword')
+            keyAlias mKeyAlias
+            keyPassword project.property('ray.keyPassword')
+        }
+        debug {
+            //调试版本的签名配置/
+            storeFile file(System.properties['keyStore'])
+            storePassword project.property('ray.keyPassword')
+            keyAlias mKeyAlias
+            keyPassword project.property('ray.keyPassword')
+        }
+    }
+
+    productFlavors {
+        online {
+            flavorDimensions "default"
+            resValue("string", "productName", "online")
+            manifestPlaceholders = [APPNAME: "ONLINE DECORATION"]
+            applicationId applicationReleaseId
+        }
+        offline {
+            flavorDimensions "default"
+            manifestPlaceholders = [APPNAME: "OFFLINE DECORATION"]
+            resValue("string", "productName", "offline")
+            applicationId applicationTestId
+        }
+    }
+
+    dataBinding {
+        enabled true
+    }
+
+    sourceSets{
+        main {
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+            java.srcDirs = ['src/main/java']
+            resources.srcDirs = ['src/main/resources']
+            aidl.srcDirs = ['src/main/aidl']
+            renderscript.srcDirs = ['src/maom']
+            res.srcDirs = ['src/main/res']
+            assets.srcDirs = ['src/main/assets']
+            jniLibs.srcDir 'src/main/jniLibs'
+        }
+        online {
+            java.srcDirs = ['src/online/java']
+            res.srcDirs = ['src/online/res']
+        }
+        offline{
+            res.srcDirs = ['src/offline/res']
+            java.srcDirs = ['src/offline/java']
+        }
+//        offline.res.srcDirs = ['src/main/res-offline']
+//        online.res.srcDirs = ['src/main/res-online']
+
+//        offline.res.srcDirs = ['src/offline/res']
+//        online.res.srcDirs = ['src/online/java']
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
