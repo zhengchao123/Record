@@ -1,0 +1,77 @@
+工程Project 中的 build.gradle : 工程控制Gradle编译配置
+
+模块module中的 build.gradle ： 控制每个Module的编译过程
+
+gradle.properties : gradle动态参数的配置文件
+
+local.properties ： 本地的配置，如：SDK位置
+
+gradle-wrapper.properties ：gradle本地代理，声明了指向目录和版本
+distributionUrl : 指定gradle版本不存在时，就从Value的地址中去下载。很多时候，我们只要版本换成我们本地存在的gradle版本就可以了
+
+settings.gradle ： 配置Gradle中的Module
+
+gradlew task -all : 罗列出所有Task ，同时携带具体作用和相互关系
+gradlew assembleDebug : 导出所有渠道测试包
+~ assembleRelease : 导出所有渠道正式包
+~ assembleBaiduDebug --stacktrace : 导出指定渠道测试包，同时携带异常信息
+~ --stop : 立即停止编译
+
+~ check : 检查任务
+
+~ build : 执行了 check和assemble
+~ clean ： 清除所有中间编译结果
+
+
+在Manifest的Application节点下
+        
+//这里以友盟为例
+<!-- 友盟统计相关meta-data -->
+ 
+<meta-data 
+ android:name="UMENG_APPKEY"
+ 
+ android:value="balabalabala" />
+
+
+<meta-data
+ android:name="UMENG_CHANNEL"
+ android:value="${UMENG_CHANNEL_VALUE}" />
+
+在build.gradle中对参数进行动态配置
+ productFlavors {
+  baidu {
+   manifestPlaceholders = [UMENG_CHANNEL_VALUE: "baidu"]
+   }
+
+
+gradle.properties 的使用
+
+系统属性：
+配置： systemProp.proName=123 
+使用：System.properties['proName']
+
+自定义属性 ：
+配置： 有key： ray.proName=123 ，无key :  proName = 123
+使用： 有key： project。property('proName') , 无key ： proName
+如下例子 
+properties中
+
+#使用系统参数配置
+systemProp.keyStore=keystore.jks
+#使用key/value键值对配置
+ray.keyPassword=scsowing
+#属性配置
+mKeyAlias=scsowing
+
+gradle中
+
+storeFile file(System.properties['keyStore'])
+            //签名密码
+            storePassword project.property('ray.keyPassword')
+            //别名
+            keyAlias project.project('mKeyAlias')
+            keyPassword project.property('ray.keyPassword')
+
+
+Could not find method storeFile() for arguments [F:\workplace\android-userapp\app\keystore.jks] on BuildType_Decorated{name=release, debuggable=false, testCoverageEnabled=false, jniDebuggable=false, pseudoLocalesEnabled=false, renderscriptDebuggable=false, renderscriptOptimLevel=3, minifyEnabled=true, zipAlignEnabled=true, signingConfig=null, embedMicroApp=true, mBuildConfigFields={RELEASE=com.android.builder.internal.ClassFieldImpl@88b140af}, mResValues={}, mProguardFiles=[F:\workplace\android-userapp\build\intermediates\proguard-files\proguard-android.txt-3.2.0, F:\workplace\android-userapp\app\proguard-rules.pro], mConsumerProguardFiles=[], mManifestPlaceholders={}} of type com.android.build.gradle.internal.dsl.BuildType.
