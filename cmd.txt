@@ -9,3 +9,9 @@ adb shell dumpsys activity | grep "mFocusedActivity" 查看栈顶activity
 git config --global -l查看账户信息
 git config --global user.email "zcligong@sina.com"  设置账号邮箱
 git config --global user.name "zhengchao" 设置账号名称
+
+
+adb shell am start -n  com.scsowing.test.decoration/decoration.scsowing.com.decoration.ui.activity.MainActivity
+
+
+com.scsowing.test.decoration/decoration.scsowing.com.decoration.ui.activity.MainActivity
