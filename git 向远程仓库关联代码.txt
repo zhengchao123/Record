@@ -1,0 +1,14 @@
+1.or create a new repository on the command line
+
+echo "# RN_Demo" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin git@github.com:zhengchao123/RN_Demo.git
+git push -u origin master
+
+
+
+2.or push an existing repository from the command line
+git remote add origin git@github.com:zhengchao123/RN_Demo.git
+git push -u origin master
