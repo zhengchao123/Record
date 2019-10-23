@@ -1,14 +1,14 @@
-windows��
-adb shell dumpsys activity | findstr "mFocusedActivity" �鿴ջ��activity
-adb shell dumpsys activity | findstr "mFocusedActivity | ResumeActivity"  ��ϲ�ѯ
-ubuntu��
-adb shell dumpsys activity | grep "mFocusedActivity" �鿴ջ��activity
+windows下
+adb shell dumpsys activity | findstr "mFocusedActivity" 查看栈顶activity
+adb shell dumpsys activity | findstr "mFocusedActivity | ResumeActivity"  组合查询
+ubuntu下
+adb shell dumpsys activity | grep "mFocusedActivity" 查看栈顶activity
 
- ls -al ~/.ssh  �鿴ssh�µ�����
+ ls -al ~/.ssh  查看ssh下的配置
 
-git config --global -l�鿴�˻���Ϣ
-git config --global user.email "zcligong@sina.com"  �����˺�����
-git config --global user.name "zhengchao" �����˺�����
+git config --global -l查看账户信息
+git config --global user.email "zcligong@sina.com"  设置账号邮箱
+git config --global user.name "zhengchao" 设置账号名称
 
 
 adb shell am start -n  com.scsowing.test.decoration/decoration.scsowing.com.decoration.ui.activity.MainActivity
@@ -21,3 +21,11 @@ com.scsowing.test.decoration/decoration.scsowing.com.decoration.ui.activity.Main
 adb shell input keyevent 82
 
 adb reverse tcp:8081 tcp:8081
+
+1.一条比较完整的monkey测试命令
+adb shell monkey -v -v -v -s 8888 --throttle 300 --pct-touch 30 --pct-motion 25 --pct-appswitch 25 --pct-majornav 5 --pct-nav 0 --pct-trackball 0 -p com.wwdy.app 10000 >D:\monkey.txt
+这是一个比较完整的monkey测试命令，3个-v显示最详细的测试信息，指定种子值为8888，指定触摸事件占30%、手势事件占25%、Activity跳转占25%、主导航占5%、方向导航0%、轨迹球0%，剩下的15%随机分配给其它未指定的事件，约束只测试包名为com.wwdy.app的应用，指定事件数为10000次，输出的测试信息保存到D盘的monkey.txt文件中。
+由于10000次耗时太长，这里改成10次执行该命令向大家解释一下测试结果信息。(正式测试可改成10000甚至更多次)
+
+Macintosh HD⁩ ▸ ⁨用户⁩ ▸ ⁨zhengchao⁩ ▸ ⁨文稿⁩ ▸ ⁨
+monkeyfiles⁩echo off > d:\1.txt创建文件
